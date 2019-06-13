@@ -44,3 +44,7 @@ _deps
 *.out
 *.app
 
+__pycache__/
+.idea/
+venv/
+resource_conflict_examples/deadlock/deadlock_example

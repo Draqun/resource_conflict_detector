@@ -54,7 +54,7 @@ Job::Job(std::vector<std::string> job_definition)
 
 void Job::call_job()
 {
-	std::cout<<"Calling job: " <<this->job_program <<" " << this->job_params <<std::endl;
+	std::cout<<"Calling job: " <<this->job_program <<" " << this->job_params;
 }
 
 

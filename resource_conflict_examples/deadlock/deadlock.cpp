@@ -15,8 +15,7 @@ void* run_job(void *args)
 	std::vector<std::string> actual_date = convert_job_string_to_vector(std::ctime(&tmp_date_obj));
 	
 	pthread_mutex_lock(&m);
-	if ( user_job.is_day_of_week(actual_date.at(0)) && user_job.is_month(actual_date.at(1))
-		&& user_job.is_month_day(actual_date.at(2)) && user_job.is_time(actual_date.at(3)) )
+	if ( user_job.is_day_of_week(actual_date.at(0)) && user_job.is_month(actual_date.at(1)) && user_job.is_month_day(actual_date.at(2)) && user_job.is_time(actual_date.at(3)) )
 	{
 		if (user_job.month_day != "29" && user_job.month != "2")
 		{
@@ -44,14 +43,19 @@ int main(int argc, char* argv[])
 	char job_definition[] {"59 23 29 2 Sut echo 'Job is done'"};
 	char job_definition2[] {"* * * * * echo 'Job2 is done'"};
 
-	const unsigned max = 10;
+	unsigned max;
+	std::cout<<"Give number of steps: ";
+	std::cin>>max;
+
 	for (unsigned i = max; i > 0; --i)
 	{
-		std::cout <<"Iteration " <<max - i <<std::endl;
+		std::cout<<'\r';
+		std::cout <<"Iteration " <<max - i + 1 <<" ";
 		pthread_create(&t1, NULL, run_job, static_cast<void*>(job_definition));
 		pthread_create(&t2, NULL, run_job, static_cast<void*>(job_definition2));
 		pthread_join(t1, NULL);
 		pthread_join(t2, NULL);
 	}
+	std::cout<<std::endl;
 	return 0;
 }
