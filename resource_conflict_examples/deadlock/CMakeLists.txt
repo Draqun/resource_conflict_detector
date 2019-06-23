@@ -7,7 +7,7 @@ set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
 set(BINARY_NAME deadlock_example)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -g")
 set(CMAKE_CXX_STANDARD 17)
 
 include_directories(".")

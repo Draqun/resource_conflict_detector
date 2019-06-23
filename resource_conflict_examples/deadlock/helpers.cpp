@@ -2,12 +2,11 @@
 
 std::vector<std::string> convert_job_string_to_vector(const std::string &job_definition, const char delimiter)
 {
-	std::string token;
-	std::vector<std::string> tokens;
+	std::vector<std::string> tokens(100);
 	std::istringstream tokenStream(job_definition);
-
 	std::string multitoken {};
 	bool is_multitoken {false};
+	std::string token;
 	while(std::getline(tokenStream, token, delimiter))
 	{
 		if (token.front() == '\'')
@@ -17,11 +16,11 @@ std::vector<std::string> convert_job_string_to_vector(const std::string &job_def
 
 		if (is_multitoken)
 		{
-			multitoken +=  multitoken.empty() ? token : " " + token;
+			multitoken.append(multitoken.empty() ? token : " " + token);
 			if (token.back() == '\'')
 			{
 				is_multitoken = false;
-				token = multitoken;
+				token.append(multitoken);
 				multitoken.clear();
 			}
 		}
@@ -30,7 +29,7 @@ std::vector<std::string> convert_job_string_to_vector(const std::string &job_def
 			tokens.push_back(token);
 		}
 	}
-	return tokens;
+	return std::move(tokens);
 }
 
 Job::Job(std::vector<std::string> job_definition)
@@ -58,32 +57,32 @@ void Job::call_job()
 }
 
 
-bool Job::is_minutes(const std::string min)
+bool Job::is_minutes(const std::string &min)
 {
 	return this->minutes != "*" ? min == this->minutes : true;
 }
 
-bool Job::is_hours(const std::string h)
+bool Job::is_hours(const std::string &h)
 {
 	return this->hours != "*" ? h == this->hours : true;
 }
 
-bool Job::is_month_day(const std::string md)
+bool Job::is_month_day(const std::string &md)
 {
 	return this->month_day != "*" ?  md == this->month_day : true;
 }
 
-bool Job::is_month(const std::string m)
+bool Job::is_month(const std::string &m)
 {
 	return this->month != "*" ?  m == this->month : true;
 }
 
-bool Job::is_day_of_week(const std::string dow)
+bool Job::is_day_of_week(const std::string &dow)
 {
 	return this->day_of_week != "*" ?  dow == this->day_of_week : true;
 }
 
-bool Job::is_time(const std::string t)
+bool Job::is_time(const std::string &t)
 {
 	auto time_vector = convert_job_string_to_vector(t, ':');
 	return this->is_hours(time_vector.at(0)) && this->is_minutes(time_vector.at(1));

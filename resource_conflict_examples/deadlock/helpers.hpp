@@ -20,12 +20,12 @@ public:
 	Job(std::vector<std::string> job_definition);
 	void call_job();
 
-	bool is_minutes(const std::string min);
-	bool is_hours(const std::string h);
-	bool is_month_day(const std::string md);
-	bool is_month(const std::string m);
-	bool is_day_of_week(const std::string dow);
-	bool is_time(const std::string t);
+	bool is_minutes(const std::string &min);
+	bool is_hours(const std::string &h);
+	bool is_month_day(const std::string &md);
+	bool is_month(const std::string &m);
+	bool is_day_of_week(const std::string &dow);
+	bool is_time(const std::string &t);
 
 	friend std::ostream& operator <<(std::ostream &out, const Job &j);
 };

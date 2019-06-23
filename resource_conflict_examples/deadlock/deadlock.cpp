@@ -1,9 +1,11 @@
+#include <cerrno>
 #include <chrono>
 #include <helpers.hpp>
 #include <pthread.h>
+#include <cstring>
 
 
-pthread_mutex_t m;
+pthread_mutex_t m PTHREAD_MUTEX_INITIALIZER;
 
 
 void* run_job(void *args)
@@ -11,13 +13,18 @@ void* run_job(void *args)
 	std::string job_definition {static_cast<const char*>(args)};
 	//std::cout<<job_definition <<std::endl;
 	Job user_job {convert_job_string_to_vector(job_definition)};
-	const auto tmp_date_obj = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-	std::vector<std::string> actual_date = convert_job_string_to_vector(std::ctime(&tmp_date_obj));
+	const auto tmp_date_obj {std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())};
+	std::vector<std::string> actual_date {convert_job_string_to_vector(std::ctime(&tmp_date_obj))};
 	
-	pthread_mutex_lock(&m);
-	if ( user_job.is_day_of_week(actual_date.at(0)) && user_job.is_month(actual_date.at(1)) && user_job.is_month_day(actual_date.at(2)) && user_job.is_time(actual_date.at(3)) )
+	int err_no {pthread_mutex_lock(&m)};
+	if (err_no)
 	{
-		if (user_job.month_day != "29" && user_job.month != "2")
+		std::cerr<< "Error nr. " <<err_no << " " << strerror(err_no) <<std::endl;
+		return nullptr;
+	}
+	if (user_job.is_day_of_week(actual_date.at(0)) && user_job.is_month(actual_date.at(1)) && user_job.is_month_day(actual_date.at(2)) && user_job.is_time(actual_date.at(3)))
+	{
+		if (user_job.month_day != "29" && user_job.month != "2" && user_job.minutes != "59" && user_job.hours != "23" && user_job.day_of_week != "Sut")
 		{
 			user_job.call_job();
 			pthread_mutex_unlock(&m);
