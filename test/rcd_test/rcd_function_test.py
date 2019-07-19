@@ -20,7 +20,5 @@ class RcdFunctionTest(unittest.TestCase):
         self.assertTrue("body:" in repr(self.f1))
 
 
-
-
 if __name__ == '__main__':
     unittest.main()
