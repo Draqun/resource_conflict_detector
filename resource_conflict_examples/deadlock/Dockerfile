@@ -13,6 +13,8 @@ RUN apt -y install cmake gcc g++
 RUN chmod +x run_application.sh
 RUN cmake .
 RUN make
+RUN make clean
+
 
 RUN echo "648000" > data.in
 
